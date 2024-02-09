@@ -1,1 +1,2 @@
 # Linear-Regression
+Linear regression is a type of supervised machine learning algorithm that computes the linear relationship between a dependent variable (also known as the target variable) and one or more independent features (also known as predictor variables). When there’s only one independent feature, it’s called Univariate Linear Regression. If there are multiple features, it’s termed multivariate linear regression
