@@ -1,84 +1,45 @@
+#Multilinear regression
 import numpy as np
 import pandas as pd
-dataset = pd.read_csv('/content/2018_PM_2.5 & RH.csv')
-print(dataset )
-
-dataset.corr()
-
-X=dataset['RH']
-Y=dataset['PM_2_5']
-
-X.shape
-
-Y.shape
-
-from sklearn.linear_model import LinearRegression
-X=np.array(X).reshape(-1,1)
-Y=np.array(Y).reshape(-1,1)
-X.shape
-
-!pip install scikit_learn
-from sklearn.model_selection import train_test_split
-
-X_train,X_test,Y_train,Y_test=train_test_split(X,Y, test_size=0.5, random_state=42)
-
-from sklearn.preprocessing import StandardScaler
-sc=StandardScaler()
-X_train=sc.fit_transform(X_train)
-X_test=sc.transform(X_test)
-print(X_train)
-
-from sklearn.linear_model import LinearRegression
-model=LinearRegression()
-model.fit(X_train,Y_train)
-
-model.intercept_
-
-model.coef_
-
-RMSE :
+dataset = pd.read_csv('D:/STUDY & WORK/Sem3/Machine Learning/Mini Project/CSV/2018_Air_alldata.csv')
+print(dataset)
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import roc_curve, roc_auc_score, auc
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-from sklearn.datasets import make_classification
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import MinMaxScaler
 
-# Generate synthetic data for demonstration purposes
-X, y = make_classification(n_samples=1000, n_features=20, random_state=42)
+# Define your features (independent variables) and target (dependent variable)
+X = dataset.drop('RH', axis=1)  # Replace with your actual feature columns
+y = dataset['RH']  # Replace with your actual target column
+
+# Perform feature scaling (Normalization)
+scaler = MinMaxScaler()
+X_scaled = scaler.fit_transform(X)
+y_scaled = scaler.fit_transform(y.values.reshape(-1, 1))
 
 # Split the data into a training and testing set
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_scaled, test_size=0.2, random_state=42)
 
-# Train a binary classification model (e.g., Logistic Regression)
-model = LogisticRegression()
+# Train a multilinear regression model
+model = LinearRegression()
 model.fit(X_train, y_train)
-# Get predicted probabilities on the test set
-y_scores = model.predict_proba(X_test)[:, 1]
 
-# Calculate ROC curve and AUC
-fpr, tpr, thresholds = roc_curve(y_test, y_scores)
-roc_auc = auc(fpr, tpr)
+# Make predictions on the test set
+y_pred = model.predict(X_test)
 
-# Plot the ROC curve
-plt.figure(figsize=(8, 6))
-plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = {:.2f})'.format(roc_auc))
-plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('ROC Curve PM2.5 2018')
-plt.legend(loc='lower right')
-plt.show()
+# Calculate Mean Squared Error (MSE)
+mse = mean_squared_error(y_test, y_pred)
 
-# Calculate the AUC score
-print("AUC:", roc_auc)
+# Calculate Root Mean Squared Error (RMSE)
+rmse = np.sqrt(mse)
 
-Y_pred = model.predict(X_test)
-from sklearn.metrics import accuracy_score
-accuracy = accuracy_score(y_test, Y_pred)
-print("Accuracy of the Model: {:.2f}%".format(accuracy * 100))
+# Calculate R-squared (R2) score
+r2score = r2_score(y_test, y_pred)
 
+print("Mean Squared Error (MSE):", mse)
+print("Root Mean Squared Error (RMSE):", rmse)
+print("R-squared (R2) Score:", r2score)
 
