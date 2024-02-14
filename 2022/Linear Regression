@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 
 # Load your dataset (replace 'your_dataset.csv' with the actual dataset file)
-dataset = pd.read_csv('D:/STUDY & WORK/Sem3/Machine Learning/Mini Project/CSV/2020_Air_alldata.csv')
+dataset = pd.read_csv('D:/STUDY & WORK/Sem3/Machine Learning/Mini Project/CSV/2022_Air_alldata.csv')
 
 # Define your features (independent variables) and target (dependent variable)
 X = dataset.drop('RH', axis=1)  # Replace with your actual feature columns
